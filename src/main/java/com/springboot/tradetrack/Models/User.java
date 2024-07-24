@@ -2,6 +2,8 @@ package com.springboot.tradetrack.Models;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,6 +34,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private Set<Order> orders;
 
     @ManyToMany(fetch = FetchType.EAGER)

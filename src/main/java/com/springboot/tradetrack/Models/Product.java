@@ -3,6 +3,8 @@ package com.springboot.tradetrack.Models;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,7 @@ public class Product {
     private BigDecimal price;
 
     @ManyToMany(mappedBy = "products")
+    @JsonBackReference
     private Set<Order> orders;
 
     public Integer getId() {
