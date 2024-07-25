@@ -29,7 +29,7 @@ public class Order {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
     private LocalDateTime orderDate;

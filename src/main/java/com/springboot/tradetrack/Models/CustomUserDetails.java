@@ -27,6 +27,8 @@ public class CustomUserDetails implements UserDetails {
     // Implement all methods from UserDetails interface
 
     public Integer getUserId() {
+        // System.out.println("User id: " + userId);
+        System.out.println("CustomUserDetails.getUserId: " + userId);
         return userId;
     }
 

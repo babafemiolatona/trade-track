@@ -36,6 +36,9 @@ public class OrderService {
     // }
 
     public ResponseEntity<Order> createOrder(OrderCreationRequest orderRequest, Integer userId) {
+        System.out.println("OrderService.createOrder - User id: " + userId);
+        // Ensure userId is not null and is correctly processed
+        
         Order order = new Order();
         order.setUserId(userId, userDao);
         // System.out.println(userId);
