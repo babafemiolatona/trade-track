@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Models.Product;
+import com.springboot.tradetrack.Models.ProductDto;
 import com.springboot.tradetrack.Service.ProductService;
 
 @RestController
@@ -27,8 +28,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public ResponseEntity<String> addProduct(@RequestBody ProductDto productDto) {
+        return productService.addProduct(productDto);
     }
 
     @GetMapping("{id}")

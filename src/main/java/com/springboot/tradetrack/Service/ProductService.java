@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.tradetrack.Dao.ProductDao;
 import com.springboot.tradetrack.Models.Product;
+import com.springboot.tradetrack.Models.ProductDto;
 
 @Service
 public class ProductService {
@@ -21,7 +22,12 @@ public class ProductService {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> addProduct(Product product) {
+    public ResponseEntity<String> addProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+
         productDao.save(product);
         return new ResponseEntity<>("Product added Successfully", HttpStatus.CREATED);
     }

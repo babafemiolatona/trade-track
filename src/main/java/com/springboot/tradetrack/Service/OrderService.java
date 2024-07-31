@@ -1,10 +1,8 @@
 package com.springboot.tradetrack.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-// import java.time.LocalDateTime;
-// import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,20 +27,10 @@ public class OrderService {
     @Autowired
     ProductDao productDao;
 
-    // public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
-    //     Order order = convertToOrder(orderRequest);
-    //     orderDao.save(order);
-    //     return new ResponseEntity<>("Order created successfully", HttpStatus.CREATED);
-    // }
-
-    public ResponseEntity<Order> createOrder(OrderCreationRequest orderRequest, Integer userId) {
-        System.out.println("OrderService.createOrder - User id: " + userId);
-        // Ensure userId is not null and is correctly processed
-        
+    public ResponseEntity<Order> createOrder(OrderCreationRequest orderRequest, Integer userId) {        
         Order order = new Order();
         order.setUserId(userId, userDao);
-        // System.out.println(userId);
-        order.setOrderDate(orderRequest.getOrderDate());
+        order.setOrderDate(LocalDateTime.now());
         order.setProductIds(orderRequest.getProductIds(), productDao);
 
         Order savedOrder = orderDao.save(order);
@@ -58,16 +46,4 @@ public class OrderService {
         Optional<Order> order = orderDao.findById(orderId);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
-
-    // private Order convertToOrder(OrderRequest orderRequest) {
-    //     Order order = new Order();
-    //     order.setUserId(orderRequest.getUserId(), userDao);
-
-    //     // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    //     // LocalDateTime orderDate = LocalDateTime.parse(orderRequest.getOrderDate(), formatter);
-    //     order.setOrderDate(orderRequest.getOrderDate());
-
-    //     order.setProductIds(orderRequest.getProductIds(), productDao);
-    //     return order;
-    // }
 }

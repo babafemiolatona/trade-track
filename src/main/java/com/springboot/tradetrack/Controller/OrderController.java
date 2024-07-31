@@ -28,12 +28,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderCreationRequest orderRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
-
         Integer userId = userDetails.getUserId();
-        // System.out.println("User id: " + userId);
-        System.out.println("OrderController.createOrder - User id: " + userId);
-
-
         return orderService.createOrder(orderRequest, userId);
     }
 
