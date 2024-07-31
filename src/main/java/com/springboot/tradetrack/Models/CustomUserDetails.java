@@ -13,9 +13,9 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
-    private Integer userId; // Custom field
+    private Integer userId;
 
-    // Constructor
+    
     public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities, Integer userId) {
         this.username = username;
         this.password = password;
@@ -23,15 +23,7 @@ public class CustomUserDetails implements UserDetails {
         this.userId = userId;
     }
 
-    // Getters and setters for all fields
-    // Implement all methods from UserDetails interface
-
     public Integer getUserId() {
-        // System.out.println("User id: " + userId);
-        System.out.println("CustomUserDetails.getUserId: " + userId);
         return userId;
     }
-
-    
-    // Other getters and UserDetails methods implementation
 }

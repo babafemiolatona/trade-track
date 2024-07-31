@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class OrderCreationRequest {
 
-    // private Integer userId;
     private LocalDateTime orderDate;
     private List<Integer> productIds;
 }

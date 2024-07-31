@@ -10,7 +10,6 @@ import jakarta.persistence.PrePersist;
 import lombok.Data;
 
 
-// @Entity
 @Data
 public class OrderRequest {
 
