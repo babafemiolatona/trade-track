@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Models.Product;
 import com.springboot.tradetrack.Models.ProductDto;
+import com.springboot.tradetrack.Models.ProductUpdate;
 import com.springboot.tradetrack.Service.ProductService;
 
 @RestController
@@ -38,8 +39,8 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateProduct(@RequestBody Product product, @PathVariable Integer id) {
-        return productService.updateProduct(product, id);
+    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdate productUpdate, Integer id) {
+        return productService.updateProduct(productUpdate, id);
     }
 
     @DeleteMapping("{id}")

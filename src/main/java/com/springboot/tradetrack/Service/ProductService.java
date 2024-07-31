@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.springboot.tradetrack.Dao.ProductDao;
 import com.springboot.tradetrack.Models.Product;
 import com.springboot.tradetrack.Models.ProductDto;
+import com.springboot.tradetrack.Models.ProductUpdate;
 
 @Service
 public class ProductService {
@@ -37,13 +38,21 @@ public class ProductService {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProduct(Product product, Integer id) {
+    public ResponseEntity<String> updateProduct(ProductUpdate productUpdate, Integer id) {
         try {
-            if (!id.equals(product.getId())) {
+            if (!id.equals(productUpdate.getId())) {
                 return new ResponseEntity<>("Product id mismatch", HttpStatus.BAD_REQUEST);
             }
             if (productDao.existsById(id)) {
-                product.setId(id);
+                Product product = productDao.findById(id).orElse(null);
+                if (product == null) {
+                    return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+                }
+
+                product.setName(productUpdate.getName());
+                product.setPrice(productUpdate.getPrice());
+                product.setDescription(productUpdate.getDescription());
+
                 productDao.save(product);
                 return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
             } else {
