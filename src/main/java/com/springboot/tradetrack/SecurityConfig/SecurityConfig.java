@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 // import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -36,11 +37,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/v1/orders").permitAll()
-            .requestMatchers("/api/v1/orders/{id}").permitAll()
-            .requestMatchers("/api/v1/products").hasRole("ADMIN")
-            .requestMatchers("/api/v1/products/{id}").permitAll()
-            .requestMatchers("/api/v1/auth/register", "/login").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/v1/products").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasRole("ADMIN")
+            .requestMatchers("/api/v1/auth/*").permitAll()
+            .requestMatchers("/api/v1/cart/add/{productId}").permitAll()
+            .requestMatchers("/api/v1/cart/remove/{productId}").permitAll()
+            .requestMatchers("/api/v1/cart/clear").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
