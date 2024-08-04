@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.springboot.tradetrack.Service.CustomUserDetailsService;
 // import com.springboot.tradetrack.SecurityConfig.JwtAuthFilter;
+import com.springboot.tradetrack.Utils.CustomAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -46,10 +47,14 @@ public class SecurityConfig {
             .requestMatchers("/api/v1/cart/clear").permitAll()
             .anyRequest().authenticated()
             .and()
+            .exceptionHandling()
+            .accessDeniedHandler(new CustomAccessDeniedHandler())
+            .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic();
+
         return http.build();
     }
 
