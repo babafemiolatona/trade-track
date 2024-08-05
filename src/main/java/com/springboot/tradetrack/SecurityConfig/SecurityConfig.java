@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.springboot.tradetrack.Service.CustomUserDetailsService;
 // import com.springboot.tradetrack.SecurityConfig.JwtAuthFilter;
 import com.springboot.tradetrack.Utils.CustomAccessDeniedHandler;
+import com.springboot.tradetrack.Utils.CustomAuthEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +27,12 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private CustomAccessDeniedHandler CustomAccessDeniedHandler;
+
+    @Autowired
+    private CustomAuthEntryPoint customAuthEntryPoint;
 
     @Autowired
     public SecurityConfig(@Lazy CustomUserDetailsService userDetailsService, @Lazy JwtAuthFilter jwtAuthFilter) {
@@ -45,10 +52,13 @@ public class SecurityConfig {
             .requestMatchers("/api/v1/cart/add/{productId}").permitAll()
             .requestMatchers("/api/v1/cart/remove/{productId}").permitAll()
             .requestMatchers("/api/v1/cart/clear").permitAll()
+            .requestMatchers("/api/v1/products/search").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
-            .accessDeniedHandler(new CustomAccessDeniedHandler())
+            .accessDeniedHandler(CustomAccessDeniedHandler)
+            .authenticationEntryPoint(customAuthEntryPoint)
+
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
