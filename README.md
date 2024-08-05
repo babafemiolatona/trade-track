@@ -1,3 +1,3 @@
 # Trade-Track
 
-It is an e-commerce API built with springboot. 
+Trade-Track is a Spring Boot-based e-commerce API for managing products, user authentication, and shopping cart operations.
