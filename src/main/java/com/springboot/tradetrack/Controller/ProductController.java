@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Models.Product;
@@ -46,5 +47,10 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Integer id) {
         return productService.deleteProduct(id);
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String query) {
+        return productService.searchProducts(query);
     }
 }

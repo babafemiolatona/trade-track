@@ -1,6 +1,7 @@
 package com.springboot.tradetrack.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,5 +67,23 @@ public class ProductService {
     public ResponseEntity<String> deleteProduct(Integer id) {
         productDao.deleteById(id);
         return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
-    }    
-}
+    }
+
+    public ResponseEntity<List<ProductDto>> searchProducts(String query) {
+        List<Product> products = productDao.searchByQuery(query);
+        List<ProductDto> productDtos = products.stream()
+                       .map(this::convertToDTO)
+                       .collect(Collectors.toList());
+
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
+    private ProductDto convertToDTO(Product product) {
+        ProductDto dto = new ProductDto();
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        return dto;
+    }
+}    
+
