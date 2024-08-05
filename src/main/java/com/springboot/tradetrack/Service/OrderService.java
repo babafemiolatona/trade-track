@@ -37,7 +37,7 @@ public class OrderService {
         return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<Order>> getOrdersByUserId(Integer userId) {
+    public ResponseEntity<List<Order>> getUserOrders(Integer userId) {
         List<Order> orders = orderDao.findByUserId(userId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }

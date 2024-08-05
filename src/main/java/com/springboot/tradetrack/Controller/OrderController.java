@@ -32,9 +32,10 @@ public class OrderController {
         return orderService.createOrder(orderRequest, userId);
     }
 
-    @GetMapping("user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
-        return orderService.getOrdersByUserId(userId);
+    @GetMapping
+    public ResponseEntity<List<Order>> getUserOrders(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
+        return orderService.getUserOrders(userId);
     }
 
     @GetMapping("{orderId}")
