@@ -47,6 +47,7 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Cart> carts = new ArrayList<>();
 
     public Integer getId() {

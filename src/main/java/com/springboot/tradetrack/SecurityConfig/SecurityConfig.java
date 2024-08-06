@@ -53,25 +53,20 @@ public class SecurityConfig {
             .requestMatchers("/api/v1/cart/remove/{productId}").permitAll()
             .requestMatchers("/api/v1/cart/clear").permitAll()
             .requestMatchers("/api/v1/products/search").permitAll()
+            .requestMatchers("/swagger-ui/**").permitAll()
+            .requestMatchers("/v3/api-docs/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
             .accessDeniedHandler(CustomAccessDeniedHandler)
             .authenticationEntryPoint(customAuthEntryPoint)
-
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .httpBasic();
-
-        return http.build();
-    }
-
-    // @Override
-    // public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    //     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    // }
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            
+            return http.build();
+            }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
