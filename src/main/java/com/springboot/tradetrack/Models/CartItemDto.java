@@ -9,6 +9,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class CartItemDto {
 
+    public CartItemDto(CartItem cartItem) {
+        //TODO Auto-generated constructor stub
+    }
     private Integer id;
     private ProductDto product;
     private int quantity;

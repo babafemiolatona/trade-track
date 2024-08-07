@@ -1,23 +1,21 @@
 package com.springboot.tradetrack.Models;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.springboot.tradetrack.Dao.ProductDao;
 import com.springboot.tradetrack.Dao.UserDao;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,9 +32,11 @@ public class Order {
     private User user;
     private LocalDateTime orderDate;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private Set<Product> products;
+    private Set<OrderItem> orderItems = new HashSet<>();
+
+    private BigDecimal totalSubTotal = BigDecimal.ZERO;
 
     public Integer getId() {
         return id;
@@ -66,19 +66,27 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
-    public void setProductIds(List<Integer> productIds, ProductDao productDao) {
-        this.products = productIds.stream()
-                                  .map(productDao::findById)
-                                  .filter(Optional::isPresent)
-                                  .map(Optional::get)
-                                  .collect(Collectors.toSet());
+    public BigDecimal getTotalSubTotal() {
+        return totalSubTotal;
     }
+
+    public void setTotalSubTotal(BigDecimal totalSubTotal) {
+        this.totalSubTotal = totalSubTotal;
+    }
+
+    // public void setProductIds(List<Integer> productIds, ProductDao productDao) {
+    //     this.products = productIds.stream()
+    //                               .map(productDao::findById)
+    //                               .filter(Optional::isPresent)
+    //                               .map(Optional::get)
+    //                               .collect(Collectors.toSet());
+    // }
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -23,9 +23,9 @@ public class Product {
     private String description;
     private BigDecimal price;
 
-    @ManyToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     @JsonBackReference
-    private Set<Order> orders;
+    private Set<OrderItem> orderiItems;
 
     public Product(Integer id) {
         this.id = id;

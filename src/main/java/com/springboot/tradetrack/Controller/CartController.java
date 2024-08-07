@@ -35,14 +35,6 @@ public class CartController {
         return cartService.findCartByUserId(userId);
     }
 
-    /*
-    @PostMapping("create-order")
-    public ResponseEntity<Order> createOrderFromCart(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        Integer userId = userDetails.getUserId();
-        return cartService.createOrderFromCart(userId);
-    }
-    */
-
     @DeleteMapping("remove/{productId}")
     public ResponseEntity<String> removeFromCart(@PathVariable Integer productId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();

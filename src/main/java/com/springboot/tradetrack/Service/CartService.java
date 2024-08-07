@@ -113,26 +113,4 @@ public class CartService {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     
-    // public ResponseEntity<Order> createOrderFromCart(Integer userId) {
-    //     Optional<Cart> optionalCart = cartDao.findByUserId(userId);
-
-    //     if (!optionalCart.isPresent()) {
-    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    //     }
-
-    //     Cart cart = optionalCart.get();
-    //     Order order = new Order();
-    //     order.setUserId(userId, userDao);
-    //     order.setOrderDate(LocalDateTime.now());
-    //     Set<Product> productSet = new HashSet<>(cart.getProducts());
-    //     order.setProducts(productSet);
-
-    //     Order savedOrder = orderDao.save(order);
-
-    //     cart.getProducts().clear();
-    //     cartDao.save(cart);
-
-    //     return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
-    // }
-    
 }
