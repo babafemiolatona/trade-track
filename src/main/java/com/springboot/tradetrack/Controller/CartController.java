@@ -1,7 +1,5 @@
 package com.springboot.tradetrack.Controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,11 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Models.Cart;
+import com.springboot.tradetrack.Models.CartItem;
 import com.springboot.tradetrack.Models.CustomUserDetails;
-import com.springboot.tradetrack.Models.Order;
 import com.springboot.tradetrack.Service.CartService;
 
 @RestController
@@ -24,23 +23,25 @@ public class CartController {
     @Autowired
     CartService cartService;
 
-    @PostMapping("add/{productId}")
-    public ResponseEntity<String> addToCart(@PathVariable Integer productId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PostMapping("add")
+    public ResponseEntity<CartItem> addToCart(@RequestParam Integer productId, @RequestParam Integer quantity, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();
-        return cartService.addToCart(userId, productId);
+        return cartService.addToCart(userId, productId, quantity);
     }
 
     @GetMapping
-    public Optional<Cart> getCartByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public Cart getCartByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();
         return cartService.findCartByUserId(userId);
     }
 
+    /*
     @PostMapping("create-order")
     public ResponseEntity<Order> createOrderFromCart(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();
         return cartService.createOrderFromCart(userId);
     }
+    */
 
     @DeleteMapping("remove/{productId}")
     public ResponseEntity<String> removeFromCart(@PathVariable Integer productId, @AuthenticationPrincipal CustomUserDetails userDetails) {

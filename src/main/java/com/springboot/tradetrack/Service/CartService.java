@@ -1,8 +1,7 @@
 package com.springboot.tradetrack.Service;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.springboot.tradetrack.Dao.CartDao;
+import com.springboot.tradetrack.Dao.CartItemDao;
 import com.springboot.tradetrack.Dao.OrderDao;
 import com.springboot.tradetrack.Dao.ProductDao;
 import com.springboot.tradetrack.Dao.UserDao;
 import com.springboot.tradetrack.Models.Cart;
-import com.springboot.tradetrack.Models.Order;
+import com.springboot.tradetrack.Models.CartItem;
 import com.springboot.tradetrack.Models.Product;
-import com.springboot.tradetrack.Models.User;
 
 @Service
 public class CartService {
@@ -33,34 +32,56 @@ public class CartService {
     @Autowired
     ProductDao productDao;
 
-    public ResponseEntity<String> addToCart(Integer userId, Integer productId) {
-        Optional<Cart> optionalCart = findCartByUserId(userId);
-        Cart cart;
-        if (optionalCart.isPresent()) {
-            cart = optionalCart.get();
+    @Autowired
+    CartItemDao cartItemDao;
+
+    public ResponseEntity<CartItem> addToCart(Integer userId, Integer productId, Integer quantity) {
+        Cart cart = cartDao.findByUserId(userId);
+        Product product = productDao.findById(productId).orElse(null);
+        
+        Optional<CartItem> existingCartItem = cart.getItems().stream()
+        .filter(item -> item.getProduct().getId().equals(productId))
+        .findFirst();
+
+        CartItem cartItem;
+        if (existingCartItem.isPresent()) {
+            cartItem = existingCartItem.get();
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItem.setSubTotal(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
         } else {
-            User user = userDao.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-            cart = new Cart();
-            cart.setUser(user);
+            cartItem = new CartItem();
+            cartItem.setProduct(product);
+            cartItem.setCart(cart);
+            cartItem.setQuantity(quantity);
+
+            BigDecimal itemSubTotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+            cartItem.setSubTotal(itemSubTotal);
+
+            cart.getItems().add(cartItem);
         }
 
-        cart.getProducts().add(new Product(productId));
+        cartItemDao.save(cartItem);
         cartDao.save(cart);
-
-        return new ResponseEntity<>("Product added to cart", HttpStatus.OK);
-
+        
+        return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
     }
 
-    public Optional<Cart> findCartByUserId(Integer userId) {
-        return cartDao.findByUserId(userId);
+    public Cart findCartByUserId(Integer userId) {
+        Cart cart = cartDao.findByUserId(userId);
+
+        if (cart != null) {
+            BigDecimal totalSubTotal = calculateTotalSubTotal(cart);
+            cart.setTotalSubTotal(totalSubTotal);
+        }
+
+        return cart;
     }
 
     public ResponseEntity<String> removeFromCart(Integer userId, Integer productId) {
-        Optional<Cart> optionalCart = findCartByUserId(userId);
+        Cart cart = findCartByUserId(userId);
         
-        if (optionalCart.isPresent()) {
-            Cart cart = optionalCart.get();
-            boolean removed = cart.getProducts().removeIf(product -> product.getId().equals(productId));
+        if (cart != null) {
+            boolean removed = cart.getItems().removeIf(cartItem -> cartItem.getId().equals(productId));
             
             if (removed) {
                 cartDao.save(cart);
@@ -72,13 +93,12 @@ public class CartService {
             return new ResponseEntity<>("Cart not found for user", HttpStatus.NOT_FOUND);
         }
     }
-
-    public ResponseEntity<String> clearCart(Integer userId) {
-        Optional<Cart> optionalCart = findCartByUserId(userId);
     
-        if (optionalCart.isPresent()) {
-            Cart cart = optionalCart.get();
-            cart.getProducts().clear();
+    public ResponseEntity<String> clearCart(Integer userId) {
+        Cart cart = findCartByUserId(userId);
+    
+        if (cart != null) {
+            cart.getItems().clear();
             cartDao.save(cart);
             return new ResponseEntity<>("Cart cleared", HttpStatus.OK);
         } else {
@@ -86,25 +106,33 @@ public class CartService {
         }
     }
 
-     public ResponseEntity<Order> createOrderFromCart(Integer userId) {
-        Optional<Cart> optionalCart = cartDao.findByUserId(userId);
-
-        if (!optionalCart.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Cart cart = optionalCart.get();
-        Order order = new Order();
-        order.setUserId(userId, userDao);
-        order.setOrderDate(LocalDateTime.now());
-        Set<Product> productSet = new HashSet<>(cart.getProducts());
-        order.setProducts(productSet);
-
-        Order savedOrder = orderDao.save(order);
-
-        cart.getProducts().clear();
-        cartDao.save(cart);
-
-        return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
+    public BigDecimal calculateTotalSubTotal(Cart cart) {
+        List<CartItem> items = cart.getItems();
+        return items.stream()
+                    .map(CartItem::getSubTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+    
+    // public ResponseEntity<Order> createOrderFromCart(Integer userId) {
+    //     Optional<Cart> optionalCart = cartDao.findByUserId(userId);
+
+    //     if (!optionalCart.isPresent()) {
+    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //     }
+
+    //     Cart cart = optionalCart.get();
+    //     Order order = new Order();
+    //     order.setUserId(userId, userDao);
+    //     order.setOrderDate(LocalDateTime.now());
+    //     Set<Product> productSet = new HashSet<>(cart.getProducts());
+    //     order.setProducts(productSet);
+
+    //     Order savedOrder = orderDao.save(order);
+
+    //     cart.getProducts().clear();
+    //     cartDao.save(cart);
+
+    //     return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
+    // }
+    
 }

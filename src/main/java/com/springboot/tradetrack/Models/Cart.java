@@ -1,20 +1,21 @@
 package com.springboot.tradetrack.Models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -31,19 +32,21 @@ public class Cart {
     private User user;
 
 
-    @ManyToMany
-    @JoinTable(
-        name = "cart_products",
-        joinColumns = @JoinColumn(name = "cart_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id")
+    @OneToMany(
+        mappedBy = "cart",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
     )
-    @ElementCollection
-    private List<Product> products = new ArrayList<>();
+    @JsonManagedReference
+    private List<CartItem> items = new ArrayList<>();
 
-    // public void setUserId(Integer userId) {
-    //     if (this.user == null) {
-    //         this.user = new User();
-    //     }
-    //     this.user.setId(userId);
-    // }
+    private BigDecimal totalSubTotal;
+
+    public BigDecimal getTotalSubTotal() {
+        return totalSubTotal;
+    }
+
+    public void setTotalSubTotal(BigDecimal totalSubTotal) {
+        this.totalSubTotal = totalSubTotal;
+    }
 }
