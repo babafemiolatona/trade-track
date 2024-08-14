@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.springboot.tradetrack.Dao.ProductDao;
 import com.springboot.tradetrack.Models.Product;
 import com.springboot.tradetrack.Models.ProductDto;
-import com.springboot.tradetrack.Models.ProductUpdate;
 
 @Service
 public class ProductService {
@@ -39,20 +38,17 @@ public class ProductService {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProduct(ProductUpdate productUpdate, Integer id) {
+    public ResponseEntity<String> updateProduct(ProductDto productDto, Integer id) {
         try {
-            if (!id.equals(productUpdate.getId())) {
-                return new ResponseEntity<>("Product id mismatch", HttpStatus.BAD_REQUEST);
-            }
             if (productDao.existsById(id)) {
                 Product product = productDao.findById(id).orElse(null);
                 if (product == null) {
                     return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
                 }
 
-                product.setName(productUpdate.getName());
-                product.setPrice(productUpdate.getPrice());
-                product.setDescription(productUpdate.getDescription());
+                product.setName(productDto.getName());
+                product.setPrice(productDto.getPrice());
+                product.setDescription(productDto.getDescription());
 
                 productDao.save(product);
                 return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
