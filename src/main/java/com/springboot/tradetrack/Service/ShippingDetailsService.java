@@ -102,6 +102,11 @@ public class ShippingDetailsService {
         return new ResponseEntity<>(shippingDetails, HttpStatus.OK);
     }
 
+    public ResponseEntity<String> deleteShippingDetails(Integer id) {
+        shippingDetailsDao.deleteById(id);
+        return new ResponseEntity<>("Shipping details deleted successfully", HttpStatus.OK);
+    }
+
     // public ResponseEntity<List<ShippingDetails>> getShippingDetailsByUserId(Integer userId) {
     //     List<ShippingDetails> shippingDetails = shippingDetailsDao.findByUserId(userId);
     //     if (shippingDetails.isEmpty()) {
