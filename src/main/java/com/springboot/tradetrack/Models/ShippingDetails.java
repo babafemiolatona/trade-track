@@ -1,5 +1,11 @@
 package com.springboot.tradetrack.Models;
 
+import org.apache.commons.lang3.builder.ToStringExclude;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springboot.tradetrack.Dao.UserDao;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,5 +33,12 @@ public class ShippingDetails {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    // @JsonBackReference
+    @JsonIgnore
+    @ToStringExclude
     private User user;
+
+    public void setUserId(Integer userId, UserDao userDao) {
+        this.user = userDao.findById(userId).orElse(null);
+    }
 }

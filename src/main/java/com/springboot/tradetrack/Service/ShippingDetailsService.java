@@ -1,13 +1,19 @@
 package com.springboot.tradetrack.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import com.springboot.tradetrack.Dao.ShippingDetailsDao;
+import com.springboot.tradetrack.Dao.UserDao;
+import com.springboot.tradetrack.Models.CustomUserDetails;
 import com.springboot.tradetrack.Models.ShippingDetails;
 import com.springboot.tradetrack.Models.ShippingDetailsDto;
+import com.springboot.tradetrack.Models.User;
 
 import jakarta.transaction.Transactional;
 
@@ -17,14 +23,25 @@ public class ShippingDetailsService {
     @Autowired
     ShippingDetailsDao shippingDetailsDao;
 
-    @Transactional
-    public ResponseEntity<String> saveShippingDetails(ShippingDetailsDto shippingDetailsDto) {
+    // @Autowired
+    // public ShippingDetailsService(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    //     this.userDetails = userDetails;
+    // }
+    
+    // @Autowired
+    // private final CustomUserDetails userDetails;
 
-        System.out.println("Received Shipping Details: " + shippingDetailsDto);
+    @Autowired
+    UserDao userDao;
+
+    @Transactional
+    public ResponseEntity<String> saveShippingDetails(ShippingDetailsDto shippingDetailsDto, Integer userId) {
 
         if (shippingDetailsDto == null) {
             return new ResponseEntity<>("Shipping Details cannot be null", HttpStatus.BAD_REQUEST);
         }
+
+        // User user = userDao.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         ShippingDetails shippingDetails = new ShippingDetails();
         shippingDetails.setFirstName(shippingDetailsDto.getFirstName());
@@ -35,6 +52,8 @@ public class ShippingDetailsService {
         shippingDetails.setCountry(shippingDetailsDto.getCountry());
         shippingDetails.setZipCode(shippingDetailsDto.getZipCode());
         shippingDetails.setPhoneNumber(shippingDetailsDto.getPhoneNumber());
+
+        shippingDetails.setUserId(userId, userDao);
 
         try {
             shippingDetailsDao.save(shippingDetails);
@@ -77,5 +96,20 @@ public class ShippingDetailsService {
             return new ResponseEntity<>("Error updating shipping details", HttpStatus.NOT_FOUND);
         }
     }
+
+    public ResponseEntity<List<ShippingDetails>> getShippingDetailsByUserId(Integer userId) {
+        List<ShippingDetails> shippingDetails = shippingDetailsDao.findByUserId(userId);
+        return new ResponseEntity<>(shippingDetails, HttpStatus.OK);
+    }
+
+    // public ResponseEntity<List<ShippingDetails>> getShippingDetailsByUserId(Integer userId) {
+    //     List<ShippingDetails> shippingDetails = shippingDetailsDao.findByUserId(userId);
+    //     if (shippingDetails.isEmpty()) {
+    //         System.out.println("No shipping details found for userId: {}" + userId);
+    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //     }
+    //     System.out.println("Shipping details retrieved successfully for userId: {}" + userId);
+    //     return new ResponseEntity<>(shippingDetails, HttpStatus.OK);
+    // }
 
 }
