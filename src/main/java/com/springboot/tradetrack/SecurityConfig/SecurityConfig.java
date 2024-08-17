@@ -19,6 +19,7 @@ import com.springboot.tradetrack.Service.CustomUserDetailsService;
 // import com.springboot.tradetrack.SecurityConfig.JwtAuthFilter;
 import com.springboot.tradetrack.Utils.CustomAccessDeniedHandler;
 import com.springboot.tradetrack.Utils.CustomAuthEntryPoint;
+import com.springboot.tradetrack.Utils.CustomAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +35,9 @@ public class SecurityConfig {
     private CustomAuthEntryPoint customAuthEntryPoint;
 
     @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
     public SecurityConfig(@Lazy CustomUserDetailsService userDetailsService, @Lazy JwtAuthFilter jwtAuthFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthFilter = jwtAuthFilter;
@@ -43,6 +47,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+            .formLogin()
+                .loginPage("/api/v1/auth/login")
+                .failureHandler(customAuthenticationFailureHandler)
+                .and()
             .authorizeHttpRequests()
             .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAuthority("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasAuthority("ADMIN")
