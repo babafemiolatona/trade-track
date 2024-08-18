@@ -9,5 +9,6 @@ import com.springboot.tradetrack.Models.User;
 public interface UserDao extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
 }

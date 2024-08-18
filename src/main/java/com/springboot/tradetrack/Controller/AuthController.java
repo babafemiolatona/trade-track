@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Service.AuthService;
+
+import jakarta.validation.Valid;
+
 import com.springboot.tradetrack.Models.AuthRequest;
 import com.springboot.tradetrack.Models.RegisterRequest;
 
@@ -24,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
         return authService.register(registerRequest);
     }
 

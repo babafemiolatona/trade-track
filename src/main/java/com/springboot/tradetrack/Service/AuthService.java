@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.springboot.tradetrack.Dao.RoleDao;
 import com.springboot.tradetrack.Dao.UserDao;
@@ -24,8 +25,10 @@ import com.springboot.tradetrack.Models.RegisterRequest;
 import com.springboot.tradetrack.Models.Role;
 import com.springboot.tradetrack.Models.User;
 import com.springboot.tradetrack.SecurityConfig.JwtUtil;
+import com.springboot.tradetrack.Utils.UserAlreadyExistsException;
 
 @Service
+@Validated
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -46,6 +49,15 @@ public class AuthService {
     }
 
     public ResponseEntity<?> register(RegisterRequest registerRequest) {
+
+        if (userDao.findByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("Email " + registerRequest.getEmail() + " is already in use.");
+        }
+
+        if (userDao.findByUsername(registerRequest.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("Username " + registerRequest.getUsername() + " is already in use.");
+        }
+
         try {
             User user = new User();
             user.setUsername(registerRequest.getUsername());
