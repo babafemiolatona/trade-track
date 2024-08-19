@@ -16,10 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.springboot.tradetrack.Service.CustomUserDetailsService;
-// import com.springboot.tradetrack.SecurityConfig.JwtAuthFilter;
 import com.springboot.tradetrack.Utils.CustomAccessDeniedHandler;
 import com.springboot.tradetrack.Utils.CustomAuthEntryPoint;
-import com.springboot.tradetrack.Utils.CustomAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -35,9 +33,6 @@ public class SecurityConfig {
     private CustomAuthEntryPoint customAuthEntryPoint;
 
     @Autowired
-    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-
-    @Autowired
     public SecurityConfig(@Lazy CustomUserDetailsService userDetailsService, @Lazy JwtAuthFilter jwtAuthFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthFilter = jwtAuthFilter;
@@ -47,10 +42,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .formLogin()
-                .loginPage("/api/v1/auth/login")
-                .failureHandler(customAuthenticationFailureHandler)
-                .and()
             .authorizeHttpRequests()
             .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAuthority("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasAuthority("ADMIN")
@@ -62,7 +53,6 @@ public class SecurityConfig {
             .requestMatchers("/api/v1/products/search").permitAll()
             .requestMatchers("/swagger-ui/**").permitAll()
             .requestMatchers("/v3/api-docs/**").permitAll()
-            // .requestMatchers(HttpMethod.GET, "/api/v1/shipping-details").authenticated()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()

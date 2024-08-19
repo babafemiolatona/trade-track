@@ -5,16 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import com.springboot.tradetrack.Dao.ShippingDetailsDao;
 import com.springboot.tradetrack.Dao.UserDao;
-import com.springboot.tradetrack.Models.CustomUserDetails;
 import com.springboot.tradetrack.Models.ShippingDetails;
 import com.springboot.tradetrack.Models.ShippingDetailsDto;
-import com.springboot.tradetrack.Models.User;
-
 import jakarta.transaction.Transactional;
 
 @Service
@@ -22,14 +18,6 @@ public class ShippingDetailsService {
 
     @Autowired
     ShippingDetailsDao shippingDetailsDao;
-
-    // @Autowired
-    // public ShippingDetailsService(@AuthenticationPrincipal CustomUserDetails userDetails) {
-    //     this.userDetails = userDetails;
-    // }
-    
-    // @Autowired
-    // private final CustomUserDetails userDetails;
 
     @Autowired
     UserDao userDao;

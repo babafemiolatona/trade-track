@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringExclude;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -33,7 +30,6 @@ public class Cart {
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonBackReference
     @JsonIgnore
     @ToString.Exclude
     private User user;
@@ -47,13 +43,13 @@ public class Cart {
     @JsonManagedReference
     private List<CartItem> items = new ArrayList<>();
 
-    private BigDecimal totalSubTotal;
+    private BigDecimal Total;
 
-    public BigDecimal getTotalSubTotal() {
-        return totalSubTotal;
+    public BigDecimal getTotal() {
+        return Total;
     }
 
-    public void setTotalSubTotal(BigDecimal totalSubTotal) {
-        this.totalSubTotal = totalSubTotal;
+    public void setTotal(BigDecimal Total) {
+        this.Total = Total;
     }
 }

@@ -2,7 +2,6 @@ package com.springboot.tradetrack.Models;
 
 import org.apache.commons.lang3.builder.ToStringExclude;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springboot.tradetrack.Dao.UserDao;
 
@@ -33,7 +32,6 @@ public class ShippingDetails {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    // @JsonBackReference
     @JsonIgnore
     @ToStringExclude
     private User user;

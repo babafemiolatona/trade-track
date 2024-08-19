@@ -27,6 +27,7 @@ import com.springboot.tradetrack.Models.User;
 import com.springboot.tradetrack.SecurityConfig.JwtUtil;
 import com.springboot.tradetrack.Utils.UserAlreadyExistsException;
 
+
 @Service
 @Validated
 public class AuthService {
@@ -88,7 +89,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (AuthenticationException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);

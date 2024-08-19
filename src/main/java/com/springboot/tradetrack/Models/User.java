@@ -1,7 +1,6 @@
 package com.springboot.tradetrack.Models;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,13 +55,11 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    // @JsonManagedReference
     @JsonIgnore
     @ToString.Exclude
     private List<Cart> carts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    // @JsonManagedReference
     @ToStringExclude
     private Set<ShippingDetails> shippingDetails;
 }

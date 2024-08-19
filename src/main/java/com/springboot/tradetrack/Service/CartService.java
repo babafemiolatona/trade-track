@@ -70,8 +70,8 @@ public class CartService {
         Cart cart = cartDao.findByUserId(userId);
 
         if (cart != null) {
-            BigDecimal totalSubTotal = calculateTotalSubTotal(cart);
-            cart.setTotalSubTotal(totalSubTotal);
+            BigDecimal Total = calculateTotal(cart);
+            cart.setTotal(Total);
         }
 
         return cart;
@@ -106,7 +106,7 @@ public class CartService {
         }
     }
 
-    public BigDecimal calculateTotalSubTotal(Cart cart) {
+    public BigDecimal calculateTotal(Cart cart) {
         List<CartItem> items = cart.getItems();
         return items.stream()
                     .map(CartItem::getSubTotal)
