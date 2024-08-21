@@ -1,5 +1,7 @@
 package com.springboot.tradetrack.Controller;
 
+import java.util.Map;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequest authRequest) throws Exception {
         return authService.login(authRequest);
     }
 }

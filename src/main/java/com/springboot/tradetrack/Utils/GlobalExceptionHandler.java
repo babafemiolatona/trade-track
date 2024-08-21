@@ -32,4 +32,11 @@ public class GlobalExceptionHandler {
             ));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<Object> handleCartEmptyException(CartEmptyException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

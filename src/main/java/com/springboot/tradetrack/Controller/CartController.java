@@ -32,7 +32,7 @@ public class CartController {
     @GetMapping
     public Cart getCartByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();
-        return cartService.findCartByUserId(userId);
+        return cartService.getCartByUserId(userId);
     }
 
     @DeleteMapping("remove/{productId}")

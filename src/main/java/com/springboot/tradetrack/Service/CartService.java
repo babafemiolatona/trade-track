@@ -16,6 +16,7 @@ import com.springboot.tradetrack.Dao.UserDao;
 import com.springboot.tradetrack.Models.Cart;
 import com.springboot.tradetrack.Models.CartItem;
 import com.springboot.tradetrack.Models.Product;
+import com.springboot.tradetrack.Utils.CartEmptyException;
 
 @Service
 public class CartService {
@@ -66,19 +67,20 @@ public class CartService {
         return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
     }
 
-    public Cart findCartByUserId(Integer userId) {
+    public Cart getCartByUserId(Integer userId) {
         Cart cart = cartDao.findByUserId(userId);
 
-        if (cart != null) {
-            BigDecimal Total = calculateTotal(cart);
-            cart.setTotal(Total);
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new CartEmptyException("Cart is empty");
         }
+        BigDecimal Total = calculateTotal(cart);
+        cart.setTotal(Total);
 
         return cart;
     }
 
     public ResponseEntity<String> removeFromCart(Integer userId, Integer productId) {
-        Cart cart = findCartByUserId(userId);
+        Cart cart = getCartByUserId(userId);
         
         if (cart != null) {
             boolean removed = cart.getItems().removeIf(cartItem -> cartItem.getId().equals(productId));
@@ -95,7 +97,7 @@ public class CartService {
     }
     
     public ResponseEntity<String> clearCart(Integer userId) {
-        Cart cart = findCartByUserId(userId);
+        Cart cart = getCartByUserId(userId);
     
         if (cart != null) {
             cart.getItems().clear();

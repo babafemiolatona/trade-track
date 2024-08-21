@@ -83,16 +83,23 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<String> login(AuthRequest authRequest) throws Exception {
+    public ResponseEntity<Map<String, String>> login(AuthRequest authRequest) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+            // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Incorrect username or password");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
+
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
-        return new ResponseEntity<>(jwt, HttpStatus.OK);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwt);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
