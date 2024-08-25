@@ -46,6 +46,11 @@ TradeTrack is a comprehensive e-commerce API built using Spring Boot. It provide
   ```
   http://localhost:8080/swagger-ui/index.html
   ```
+## Configuration
+Set up the following environment variables or update the `application.properties` file:
+- **`DB_NAME`**: Database name.
++ **`DB_USER`**: PostgreSQL username.
+* **`DB_PASSWORD`**: PostgreSQL password.
 
 ## Usage
 ### API Endpoints
