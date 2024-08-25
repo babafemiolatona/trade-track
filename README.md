@@ -58,7 +58,7 @@ Here are some key endpoints:
 2. **User Authentication**:
   - **POST `/api/v1/auth/register`** - Register a new user.
   + **POST `/api/v1/auth/login`** - Login and get JWT.
-3. Cart Management:
+3. **Cart Management**:
   - **GET `/api/v1/cart`** - View cart items.
   + **POST `/api/v1/cart/add`** - Add a product to the cart.
   * **DELETE `/api/cart/remove/{productId}`** - Remove a product from the cart.
