@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.tradetrack.Models.Cart;
-import com.springboot.tradetrack.Models.CartItem;
 import com.springboot.tradetrack.Models.CustomUserDetails;
 import com.springboot.tradetrack.Service.CartService;
 
@@ -24,7 +23,7 @@ public class CartController {
     CartService cartService;
 
     @PostMapping("add")
-    public ResponseEntity<CartItem> addToCart(@RequestParam Integer productId, @RequestParam Integer quantity, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<String> addToCart(@RequestParam Integer productId, @RequestParam Integer quantity, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();
         return cartService.addToCart(userId, productId, quantity);
     }

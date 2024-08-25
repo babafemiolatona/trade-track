@@ -36,7 +36,7 @@ public class CartService {
     @Autowired
     CartItemDao cartItemDao;
 
-    public ResponseEntity<CartItem> addToCart(Integer userId, Integer productId, Integer quantity) {
+    public ResponseEntity<String> addToCart(Integer userId, Integer productId, Integer quantity) {
         Cart cart = cartDao.findByUserId(userId);
         Product product = productDao.findById(productId).orElse(null);
         
@@ -64,7 +64,7 @@ public class CartService {
         cartItemDao.save(cartItem);
         cartDao.save(cart);
         
-        return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
+        return new ResponseEntity<>("Product added to cart", HttpStatus.CREATED);
     }
 
     public Cart getCartByUserId(Integer userId) {
